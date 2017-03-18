@@ -23,6 +23,7 @@ namespace BasketballTinder
          public virtual DbSet<MyEntity> MyEntities { get; set; }
          public virtual DbSet<Koszykarz> Koszykarze { get; set; }
          public virtual DbSet<Wydarzenie> Wydarzenia { get; set; }
+         public virtual DbSet<UserToken> Tokeny { get; set; }
     }
 
     public class MyEntity
@@ -47,5 +48,13 @@ namespace BasketballTinder
         public string Lokalizacja { get; set; }
         public DateTime Data { get; set; }
         public double? Cena { get; set; }
+    }
+
+    public class UserToken
+    {
+        public string Id { get; set; }
+        public string Login { get; set; }
+        public string Token { get; set; }
+        public DateTime ExpireDate { get; set; }
     }
 }

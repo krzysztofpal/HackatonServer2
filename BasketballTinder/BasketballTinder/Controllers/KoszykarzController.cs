@@ -10,13 +10,16 @@ using System.Web.Mvc;
 
 namespace BasketballTinder.Controllers
 {
+    
     public class KoszykarzController : ApiController
     {
+        [BasicAuthenticationAtrybut]
         public HttpResponseMessage Get()
         {
             return Request.CreateResponse(HttpStatusCode.OK, new Entities().Koszykarze.ToList(), JsonMediaTypeFormatter.DefaultMediaType);
         }
 
+        [System.Web.Http.AllowAnonymous]
         public HttpResponseMessage Post(Koszykarz koszykarz)
         {
             List<string> errors = new List<string>();
@@ -39,10 +42,19 @@ namespace BasketballTinder.Controllers
                 try
                 {
                     Entities db = new Entities();
+                    if (db.Koszykarze.Select(x => x.Login).ToList().Exists(x=>x == koszykarz.Login))
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, "Login jest już zajęty", JsonMediaTypeFormatter.DefaultMediaType);
                     koszykarz.Id = Guid.NewGuid().ToString();
                     db.Entry(koszykarz).State = System.Data.Entity.EntityState.Added;
+
+                    UserToken token = new UserToken();
+                    token.Id = Guid.NewGuid().ToString();
+                    token.Token = Guid.NewGuid().ToString();
+                    token.Login = koszykarz.Login;
+                    token.ExpireDate = DateTime.Now.AddHours(1);
+                    db.Entry(token).State = System.Data.Entity.EntityState.Added;
                     db.SaveChanges();
-                    return Request.CreateResponse(HttpStatusCode.OK, "", JsonMediaTypeFormatter.DefaultMediaType);
+                    return Request.CreateResponse(HttpStatusCode.OK, token, JsonMediaTypeFormatter.DefaultMediaType);
                 }
                 catch(Exception e)
                 {
@@ -50,6 +62,7 @@ namespace BasketballTinder.Controllers
                 }
             }
         }
+        [BasicAuthenticationAtrybut]
         [System.Web.Mvc.HttpDelete]
         public HttpResponseMessage Delete(string id)
         {
@@ -66,7 +79,7 @@ namespace BasketballTinder.Controllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "Koszykarz o podanym Id nie istnieje", JsonMediaTypeFormatter.DefaultMediaType);
             }
         }
-
+        [BasicAuthenticationAtrybut]
         public HttpResponseMessage Put(Koszykarz koszykarz)
         {
             List<string> errors = new List<string>();

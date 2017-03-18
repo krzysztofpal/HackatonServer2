@@ -6,6 +6,7 @@
 <h2>Index</h2>
 
 <script>
+    var Token = {};
         function createKoszykarz() {
             var koszykarz = {};
             koszykarz.Login = $('#koszykarzLogin').val();
@@ -20,7 +21,8 @@
                 contentType: "application/json",
                 contentLength: json.length,
                 data: json,
-                success: function () {
+                success: function (data) {
+                    Token = data;
                     alert("Stworzono");
                 }
             });
@@ -29,6 +31,7 @@
             $.ajax({
                 url: "http://localhost:51874/api/koszykarz",
                 method: "GET",
+                headers:{ "Authorization" : "Basic " + btoa(Token.Login + ":" + Token.Token)},
                 success: function (data) {
                     $("#koszykarzeUl").html("");
                     for(var i = 0; i < data.length; i++){
@@ -41,6 +44,7 @@
             $.ajax({
                 url: "http://localhost:51874/api/koszykarz/" + $("#koszykarzId").val(),
                 method: "DELETE",
+                headers: { "Authorization": "Basic " + btoa(Token.Login + ":" + Token.Token) },
                 success: function () {
                     alert("Usunięto");
                 }
@@ -61,6 +65,7 @@
                 contentType: "application/json",
                 contentLength: json.length,
                 data: json,
+                headers: { "Authorization": "Basic " + btoa(Token.Login + ":" + Token.Token) },
                 success: function () {
                     alert("Zmodyfikowano");
                 }
@@ -71,6 +76,7 @@
             $.ajax({
                 url: "http://localhost:51874/api/wydarzenia",
                 method: "GET",
+                headers: { "Authorization": "Basic " + btoa(Token.Login + ":" + Token.Token) },
                 success: function (data) {
                     $("#wydarzeniaUl").html("");
                     for (var i = 0; i < data.length; i++) {
@@ -91,6 +97,7 @@
                 contentType: "application/json",
                 contentLength: json.length,
                 data: json,
+                headers: { "Authorization": "Basic " + btoa(Token.Login + ":" + Token.Token) },
                 success: function () {
                     alert("Stworzono");
                 }
@@ -101,6 +108,7 @@
             $.ajax({
                 url: "http://localhost:51874/api/wydarzenia/" + $("#wydarzenieId").val(),
                 method: "DELETE",
+                headers: { "Authorization": "Basic " + btoa(Token.Login + ":" + Token.Token) },
                 success: function () {
                     alert("Stworzono");
                 }
@@ -119,8 +127,28 @@
                 contentType: "application/json",
                 contentLength: json.length,
                 data: json,
+                headers: { "Authorization": "Basic " + btoa(Token.Login + ":" + Token.Token) },
                 success: function () {
                     alert("Stworzono");
+                }
+            });
+        }
+
+        function login() {
+            var auth = {};
+            auth.Login = $("#login").val();
+            auth.Haslo = $("#haslo").val();
+
+            var json = JSON.stringify(auth);
+            $.ajax({
+                url: "http://localhost:51874/api/logowanie",
+                method: "POST",
+                contentType: "application/json",
+                contentLength: json.length,
+                data: json,
+                success: function (data) {
+                    Token = data;
+                    alert("Zalogowano pomyślnie");
                 }
             });
         }
@@ -172,4 +200,9 @@
     <button onclick="deleteWydarzenie()">Usuń Wydarzenia</button>
     <button onclick="putWydarzenie()">Edytuj Wydarzenia</button>
     <ul id="wydarzeniaUl"></ul>
+</div>
+<div>
+    <input type="text" placeholder="Login" id="login"/>
+    <input type="text" placeholder="Hasło" id="haslo"/>
+    <button onclick="login()">Zaloguj się</button>
 </div>

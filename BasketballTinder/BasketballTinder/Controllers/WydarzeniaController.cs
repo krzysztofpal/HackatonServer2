@@ -8,6 +8,7 @@ using System.Web.Http;
 
 namespace BasketballTinder.Controllers
 {
+    [BasicAuthenticationAtrybut]
     public class WydarzeniaController : ApiController
     {
         public HttpResponseMessage Get()
