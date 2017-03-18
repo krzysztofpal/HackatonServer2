@@ -21,11 +21,31 @@ namespace BasketballTinder
         // on configuring and using a Code First model, see http://go.microsoft.com/fwlink/?LinkId=390109.
 
          public virtual DbSet<MyEntity> MyEntities { get; set; }
+         public virtual DbSet<Koszykarz> Koszykarze { get; set; }
+         public virtual DbSet<Wydarzenie> Wydarzenia { get; set; }
     }
 
     public class MyEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }
+    }
+
+    public class Koszykarz
+    {
+        public string Id { get; set; }
+        public string Login { get; set; }
+        public string Haslo { get; set; }
+        public string Imie { get; set; }
+        public string Nazwisko { get; set; }
+        public int Wzrost { get; set; }
+    }
+
+    public class Wydarzenie
+    {
+        public string Id { get; set; }
+        public string Lokalizacja { get; set; }
+        public DateTime Data { get; set; }
+        public double? Cena { get; set; }
     }
 }

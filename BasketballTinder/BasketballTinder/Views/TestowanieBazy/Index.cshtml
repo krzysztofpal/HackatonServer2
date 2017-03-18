@@ -1,0 +1,175 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<script>
+        function createKoszykarz() {
+            var koszykarz = {};
+            koszykarz.Login = $('#koszykarzLogin').val();
+            koszykarz.Haslo = $("#koszykarzHaslo").val();
+            koszykarz.Imie = $("#koszykarzImie").val();
+            koszykarz.Nazwisko = $("#koszykarzNazwisko").val();
+            koszykarz.Wzrost = $("#koszykarzWzrost").val();
+            var json = JSON.stringify(koszykarz);
+            $.ajax({
+                url: "http://localhost:51874/api/koszykarz",
+                method: "POST",
+                contentType: "application/json",
+                contentLength: json.length,
+                data: json,
+                success: function () {
+                    alert("Stworzono");
+                }
+            });
+        }
+        function selectKoszykarze() {
+            $.ajax({
+                url: "http://localhost:51874/api/koszykarz",
+                method: "GET",
+                success: function (data) {
+                    $("#koszykarzeUl").html("");
+                    for(var i = 0; i < data.length; i++){
+                        $("#koszykarzeUl").append("<li>Id: "+ data[i].Id+" Login: " + data[i].Login + " Haslo: " + data[i].Haslo+ " Imie: " + data[i].Imie+ "  Nazwisko: " + data[i].Nazwisko+ "</li>");
+                    }
+                }
+            });
+        }
+        function deleteKoszykarz() {
+            $.ajax({
+                url: "http://localhost:51874/api/koszykarz/" + $("#koszykarzId").val(),
+                method: "DELETE",
+                success: function () {
+                    alert("Usunięto");
+                }
+            });
+        }
+        function putKoszykarz() {
+            var koszykarz = {};
+            koszykarz.Id = $("#koszykarzId").val();
+            koszykarz.Login = $('#koszykarzLogin').val();
+            koszykarz.Haslo = $("#koszykarzHaslo").val();
+            koszykarz.Imie = $("#koszykarzImie").val();
+            koszykarz.Nazwisko = $("#koszykarzNazwisko").val();
+            koszykarz.Wzrost = $("#koszykarzWzrost").val();
+            var json = JSON.stringify(koszykarz);
+            $.ajax({
+                url: "http://localhost:51874/api/koszykarz",
+                method: "PUT",
+                contentType: "application/json",
+                contentLength: json.length,
+                data: json,
+                success: function () {
+                    alert("Zmodyfikowano");
+                }
+            });
+        }
+
+        function selectWydarzenie() {
+            $.ajax({
+                url: "http://localhost:51874/api/wydarzenia",
+                method: "GET",
+                success: function (data) {
+                    $("#wydarzeniaUl").html("");
+                    for (var i = 0; i < data.length; i++) {
+                        $("#wydarzeniaUl").append("<li>Id: " + data[i].Id + " Lokalizacja: " + data[i].Lokalizacja + " Data: " + data[i].Data + " Cena: " + data[i].Cena + "</li>");
+                    }
+                }
+            });
+        }
+
+        function createWydarzenie() {
+            var wydarzenie = {};
+            wydarzenie.Lokalizacja = "gdfdsdasfdg";
+            wydarzenie.Data = new Date(2017, 2, 3, 4, 5, 6, 7).toISOString();
+            var json = JSON.stringify(wydarzenie);
+            $.ajax({
+                url: "http://localhost:51874/api/wydarzenia",
+                method: "POST",
+                contentType: "application/json",
+                contentLength: json.length,
+                data: json,
+                success: function () {
+                    alert("Stworzono");
+                }
+            });
+        }
+
+        function deleteWydarzenie() {
+            $.ajax({
+                url: "http://localhost:51874/api/wydarzenia/" + $("#wydarzenieId").val(),
+                method: "DELETE",
+                success: function () {
+                    alert("Stworzono");
+                }
+            });
+        }
+
+        function putWydarzenie() {
+            var wydarzenie = {};
+            wydarzenie.Id = $("#wydarzenieId").val();
+            wydarzenie.Lokalizacja = "gdfdsdasfdg";
+            wydarzenie.Data = new Date(2017,2,3,4,5,6,7).toISOString();
+            var json = JSON.stringify(wydarzenie);
+            $.ajax({
+                url: "http://localhost:51874/api/wydarzenia",
+                method: "PUT",
+                contentType: "application/json",
+                contentLength: json.length,
+                data: json,
+                success: function () {
+                    alert("Stworzono");
+                }
+            });
+        }
+</script>
+
+<div>
+    <h3>Koszykarz</h3>
+    <table>
+        <tbody>
+            <tr>
+                <td>Id (tylko do modyfikowania i usuwania)</td>
+                <td><input type="text" id="koszykarzId"/></td>
+            </tr>
+            <tr>
+                <td>Login</td>
+                <td><input type="text" id="koszykarzLogin" /></td>
+            </tr>
+            <tr>
+                <td>Haslo</td>
+                <td><input type="text" id="koszykarzHaslo" /></td>
+            </tr>
+            <tr>
+                <td>Imie</td>
+                <td><input type="text" id="koszykarzImie" /></td>
+            </tr>
+            <tr>
+                <td>Nazwisko</td>
+                <td><input type="text" id="koszykarzNazwisko" /></td>
+            </tr>
+            <tr>
+                <td>Wzrost</td>
+                <td><input type="text" id="koszykarzWzrost" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <button onclick="selectKoszykarze()">Wyswietl Koszykarzy</button>
+    <button onclick="createKoszykarz()">Dodaj Koszykarza</button>
+    <button onclick="deleteKoszykarz()">Usuń Koszykarza</button>
+    <button onclick="putKoszykarz()">Edytuj Koszykarza</button>
+    <ul id="koszykarzeUl">
+
+    </ul>
+</div>
+
+<div>
+    <input type="text" id="wydarzenieId"/>
+    <button onclick="selectWydarzenie()">Wyswietl Wydarzenia</button>
+    <button onclick="createWydarzenie()">Dodaj Wydarzenia</button>
+    <button onclick="deleteWydarzenie()">Usuń Wydarzenia</button>
+    <button onclick="putWydarzenie()">Edytuj Wydarzenia</button>
+    <ul id="wydarzeniaUl"></ul>
+</div>
